@@ -54,6 +54,19 @@ def logarCadastrar():
 
     return autenticado, usuarioMaster
 
+def cadastrarProdutos():
+    nome = input('Digite o nome do produto: ')
+    ingredientes = input('Digite os ingredientes do produto: ')
+    grupo = input('Digite o grupo pertencente a esse produto: ')
+    preco = float(input('Digite o preço do produto:R$ '))
+
+    try:
+        with conexao.cursor() as cursor:
+            cursor.execute('insert into produtos(nome, ingredientes, grupo, preco) values (%s, %s, %s, %s)', (nome, ingredientes, grupo, preco))
+            conexao.commit()
+            print('Produto cadastrado com sucesso')
+    except:
+        print('Erro ao inserir os produtos no banco de dados')
 
 while not autentico:
     decisao = int(input('Digite 1 para logar e 2 para cadastrar'))
@@ -67,5 +80,15 @@ while not autentico:
 
     autentico, usuarioSupremo = logarCadastrar()
 
-if autentico == True:
+
+if autentico:
     print('Usuário autenticado com sucesso')
+
+    if usuarioSupremo == True:
+        decisaoUsuario = 1
+
+        while decisaoUsuario != 0:
+            decisaoUsuario = int(input('Digite [0] - Sair ou [1] - para cadastrar produtos: '))
+
+            if decisaoUsuario == 1:
+                cadastrarProdutos()
