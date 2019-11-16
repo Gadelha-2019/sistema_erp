@@ -68,8 +68,35 @@ def cadastrarProdutos():
     except:
         print('Erro ao inserir os produtos no banco de dados')
 
+def listarProdutos():
+    produtos = []
+
+    try:
+        with conexao.cursor() as cursor:
+            cursor.execute('select * from produtos')
+            produtosCadastrados = cursor.fetchall()
+    except:
+        print('Erro ao conectar ao banco de dados')
+    for i in produtosCadastrados:
+        produtos.append(i)
+    if len(produtos) != 0:
+        for i in range(0, len(produtos)):
+            print(produtos[i])
+    else:
+        print('Nenhum produto cadastrado!')
+
+def excluirProduto():
+    idDeletar = int(input('Digite o id referente ao produto que deseja excluir: '))
+
+    try:
+        with conexao.cursor() as cursor:
+            cursor.execute('delete from produtos where id = {}'.format(idDeletar))
+    except:
+        print('Erro ao tentar excluir o produto')
+
+
 while not autentico:
-    decisao = int(input('Digite 1 para logar e 2 para cadastrar'))
+    decisao = int(input('Digite [1] - Logar [2] - Cadastrar'))
 
     try:
         with conexao.cursor() as cursor:
@@ -88,7 +115,16 @@ if autentico:
         decisaoUsuario = 1
 
         while decisaoUsuario != 0:
-            decisaoUsuario = int(input('Digite [0] - Sair ou [1] - para cadastrar produtos: '))
+            decisaoUsuario = int(input('Digite [0] - Sair [1] - Cadastrar produtos [2] - Listar produtos cadastrados: '))
 
             if decisaoUsuario == 1:
                 cadastrarProdutos()
+            elif decisaoUsuario == 2:
+                listarProdutos()
+
+                delete = int(input('Digite [1] - Excluir produto [2] - Sair'))
+
+                if delete == 1:
+                    excluirProduto()
+
+
